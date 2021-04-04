@@ -20,7 +20,7 @@ jobs:
         board:
           - nice_nano
         shield:
-        -milk
+        - milk
     steps:
       - name: Checkout
         uses: actions/checkout@v2
