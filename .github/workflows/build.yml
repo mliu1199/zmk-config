@@ -42,7 +42,7 @@ jobs:
         timeout-minutes: 2
         continue-on-error: true
       - name: Initialize workspace (west init)
-        run: west init -l config
+        run: west init -l config\
       - name: Update modules (west update)
         run: west update
       - name: Export Zephyr CMake package (west zephyr-export)
@@ -60,7 +60,7 @@ jobs:
           echo ::set-output name=shield-arg::${SHIELD_ARG}
           echo ::set-output name=artifact-name::${ARTIFACT_NAME}
       - name: Build (west build)
-        run: west build -p -s zmk/app -b nice_nano -- -DSHIELD=milk -DZMK_CONFIG="C:/github/workspace/config"
+        run: west build -s zmk/app -b nice_nano -- -DSHIELD=milk -DZMK_CONFIG="C:/github/workspace/config"
       - name: Archive artifacts
         if: ${{ !matrix.skip-archive }}
         uses: actions/upload-artifact@v2
