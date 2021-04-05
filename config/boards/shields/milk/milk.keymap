@@ -2,6 +2,9 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/bt.h>
+#define DEFAULT 0
+#define LOWER   1
+#define RAISE   2
 
 / {
     keymap {
@@ -14,9 +17,34 @@
 // ------ //
 
             bindings = <
-    &kp RARW
-    &kp LARW
+    &lt LOWER RARW
+    &lt RAISE LARW
             >;
         };
+
+        lower_layer {
+// ------- //
+// |     | //
+// |EPTOG| //
+// ------- //
+
+            bindings = <
+    &trans
+    &ext_power EP_TOG
+            >;
+        };
+
+        raise_layer {
+// ------- //
+// |BTCLR| //
+// |     | //
+// ------- //
+
+            bindings = <
+    &bt BT_CLR
+    &trans
+            >;
+        };
+
     };
 };
