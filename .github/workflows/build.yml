@@ -1,21 +1,14 @@
 name: Build
 
-on:
-  push:
-    paths:
-      - ".github/workflows/build.yml"
-      - "app/**"
-  pull_request:
-    paths:
-      - ".github/workflows/build.yml"
-      - "app/**"
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     container:
       image: zmkfirmware/zmk-build-arm:2.4
     strategy:
+      fail-fast: false
       matrix:
         include:
           - board: nice_nano
@@ -29,15 +22,16 @@ jobs:
           cache-name: cache-zephyr-modules
         with:
           path: |
+            bootloader/
             modules/
             tools/
             zephyr/
-            bootloader/
-          key: 4-${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('config/west.yml') }}
+            zmk/
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('config/west.yml') }}
           restore-keys: |
-            4-${{ runner.os }}-build-${{ env.cache-name }}-
-            4-${{ runner.os }}-build-
-            4-${{ runner.os }}-
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
         timeout-minutes: 2
         continue-on-error: true
       - name: Initialize workspace (west init)
@@ -49,23 +43,37 @@ jobs:
       - name: Prepare variables
         id: variables
         run: |
-          SHIELD_ARG=
-          ARTIFACT_NAME="${{ matrix.board }}"
           if [ -n "${{ matrix.shield }}" ]; then
             SHIELD_ARG="-DSHIELD=${{ matrix.shield }}"
-            ARTIFACT_NAME="${ARTIFACT_NAME}-${{ matrix.shield }}"
+            ARTIFACT_NAME="${{ matrix.shield }}-${{ matrix.board }}-zmk"
+          else
+            SHIELD_ARG=
+            ARTIFACT_NAME="${{ matrix.board }}-zmk"
           fi
-          ARTIFACT_NAME="${ARTIFACT_NAME}-zmk"
           echo ::set-output name=shield-arg::${SHIELD_ARG}
           echo ::set-output name=artifact-name::${ARTIFACT_NAME}
       - name: Build (west build)
-        run: west build -s zmk/app -b ${{ matrix.board }} -- ${{ steps.variables.outputs.shield-arg }} -DMZK_CONFIG="C:/Users/Michael/zmk-config/zmk-config/config"
+        run: west build -s zmk/app -b ${{ matrix.board }} -- ${{ steps.variables.outputs.shield-arg }} -DZMK_CONFIG="${GITHUB_WORKSPACE}/config"
+      - name: Generated DTS file
+        if: always()
+        run: cat -n build/zephyr/${{ matrix.board }}.dts.pre.tmp
       - name: Archive artifacts
-        if: ${{ !matrix.skip-archive }}
         uses: actions/upload-artifact@v2
         with:
-          name: "${{ steps.variables.outputs.artifact-name }}"
+          name: '${{ steps.variables.outputs.artifact-name }}'
           path: |
             build/zephyr/zmk.hex
             build/zephyr/zmk.uf2
         continue-on-error: true
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
