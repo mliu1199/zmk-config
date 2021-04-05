@@ -59,7 +59,7 @@ jobs:
           echo ::set-output name=shield-arg::${SHIELD_ARG}
           echo ::set-output name=artifact-name::${ARTIFACT_NAME}
       - name: Build (west build)
-        run: west build -s zmk/app -b nice_nano -- -DSHIELD=milk -DMZK_CONFIG=C:/Users/Michael/zmk-config/zmk-config/config
+        run: west build -s zmk/app -b ${{ matrix.board }} -- ${{ steps.variables.outputs.shield-arg }} -DMZK_CONFIG="C:/Users/Michael/zmk-config/zmk-config/config"
       - name: Archive artifacts
         if: ${{ !matrix.skip-archive }}
         uses: actions/upload-artifact@v2
