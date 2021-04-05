@@ -1,2 +1,7 @@
+<<<<<<< HEAD
+config SHIELD_MY_BOARD
+    def_bool $(shields_list_contains,my_board)
+=======
 config SHIELD_MILK
     def_bool $(shields_list_contains,milk)
+>>>>>>> 39a7b662d0f79692709fac334b065ae38a13d7e5
