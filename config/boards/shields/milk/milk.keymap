@@ -14,8 +14,8 @@
 // ------ //
 
             bindings = <
-    &mt EP_TOG RARW
-    &mt BT_CLR LARW
+    &kp RARW
+    &kp LARW
             >;
         };
     };
