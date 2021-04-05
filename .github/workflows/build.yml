@@ -60,7 +60,7 @@ jobs:
           echo ::set-output name=shield-arg::${SHIELD_ARG}
           echo ::set-output name=artifact-name::${ARTIFACT_NAME}
       - name: Build (west build)
-        run: west build -p -b proton_c -- -DSHIELD=milk
+        run: west build -s zmk/app -p -b proton_c -- -DSHIELD=milk
       - name: Archive artifacts
         if: ${{ !matrix.skip-archive }}
         uses: actions/upload-artifact@v2
