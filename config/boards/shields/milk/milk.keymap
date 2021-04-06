@@ -7,6 +7,36 @@
 #define RAISE   2
 
 / {
+    combos {
+        compatible = "zmk,combos";
+        combo_lower {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&tog LOWER>;
+            layers = <0>;
+
+        combo_default {
+            timeout-ms = <50>;
+            key-positions = <0 1>;
+            bindings = <&tog DEFAULT>;
+            layers = <1>;
+        };
+    };
+};
+
+/ {
+    behaviors {
+        te: toggle_external {
+            compatible = "zmk,behavior-hold-tap";
+            label = "TOGGLE_EXTERNAL";
+            #binding-cells = <2>;
+            tapping-term-ms = <1000>;
+            quick_tap_ms = <200>;
+            flavor = "tap-preferred";
+            bindings = <&ext_power>, <&kp>;
+        };
+    };
+
     keymap {
         compatible = "zmk,keymap";
 
@@ -17,34 +47,21 @@
 // ------ //
 
             bindings = <
-    &lt LOWER RARW
-    &lt RAISE LARW
+    &te EP_TOG RARW
+    &kp LARW
             >;
         };
 
         lower_layer {
 // ------- //
-// |     | //
-// |EPTOG| //
-// ------- //
-
-            bindings = <
-    &trans
-    &ext_power EP_TOG
-            >;
-        };
-
-        raise_layer {
-// ------- //
+// |BTNXT| //
 // |BTCLR| //
-// |     | //
 // ------- //
 
             bindings = <
+    &bt BT_NXT
     &bt BT_CLR
-    &trans
             >;
         };
-
     };
 };
