@@ -14,6 +14,7 @@
             key-positions = <0 1>;
             bindings = <&tog LOWER>;
             layers = <0>;
+        };
 
         combo_default {
             timeout-ms = <50>;
@@ -22,9 +23,7 @@
             layers = <1>;
         };
     };
-};
 
-/ {
     behaviors {
         te: toggle_external {
             compatible = "zmk,behavior-hold-tap";
